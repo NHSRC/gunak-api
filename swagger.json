@@ -187,7 +187,7 @@
     },
     "responses" : {
       "APIError" : {
-        "description" : "Gunak uses standard HTTP status codes for communicating about various error codes. In the API error response please check the status code. Apart from the standard error, API error contains application specific error messages as well.",
+        "description" : "Gunak uses standard HTTP status codes for communicating about various error codes. In the API error response please check the status code. Apart from the standard error, API error contains application specific error messages as well. https://www.restapitutorial.com/httpstatuscodes.html",
         "content" : {
           "application/json" : {
             "schema" : {
