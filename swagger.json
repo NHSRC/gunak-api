@@ -187,7 +187,7 @@
     },
     "responses" : {
       "APIError" : {
-        "description" : "Gunak uses standard HTTP status codes for communicating about various error codes. In the API error response please check the status code. Apart from the standard error, API error contains application specific error messages as well. <a href=\"https://www.restapitutorial.com/httpstatuscodes.html\" target=\"_blank\">HTTP Status Codes</a>",
+        "description" : "Gunak uses standard <a href=\"https://www.restapitutorial.com/httpstatuscodes.html\" target=\"_blank\">HTTP Status Codes</a> for communicating about various error codes. In the API error response please check the status code. Apart from the standard error, API error contains application specific error messages as well.",
         "content" : {
           "application/json" : {
             "schema" : {
@@ -204,7 +204,7 @@
           "httpStatusCode" : {
             "type" : "integer",
             "example" : 405,
-            "description" : "For reference - https://www.restapitutorial.com/httpstatuscodes.html"
+            "description" : "For reference - <a href=\"https://www.restapitutorial.com/httpstatuscodes.html\" target=\"_blank\">HTTP Status Codes</a>"
           },
           "errorCode" : {
             "type" : "string"
