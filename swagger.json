@@ -206,9 +206,6 @@
             "example" : 405,
             "description" : "For reference - <a href=\"https://www.restapitutorial.com/httpstatuscodes.html\" target=\"_blank\">HTTP Status Codes</a>"
           },
-          "errorCode" : {
-            "type" : "string"
-          },
           "errorMessage" : {
             "type" : "string"
           }
