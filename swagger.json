@@ -207,7 +207,8 @@
             "description" : "For reference - <a href=\"https://www.restapitutorial.com/httpstatuscodes.html\" target=\"_blank\">HTTP Status Codes</a>"
           },
           "errorMessage" : {
-            "type" : "string"
+            "type" : "string",
+            "description" : "Detailed error message which provides further details. In case of Internal Server Error (500), please report the error to support."
           }
         }
       },
