@@ -30,7 +30,7 @@
     "description" : "There are three key aspects of an assessment for an API user - Facility, Assessment Tool and Assessment Instance. An assessment is done for a facility. For doing the assessment an assessment tool is used. A program can have one or more assessment tools. An example is - Program = 'Laqshya', Assessment tool = 'NQAS', 'Laqshya Monthly', 'Laqshya Baseline'. Assessment tool consists of one or more checklists. Using the same example - NQAS has 'OT' and 'Labour Room'. Lastly a facility can be assessed multiple times using the same assessment tool. A single instance of assessment could be divided among more than one assessor. For example - one assessor could do 'OT' and other one could do 'Labour Room'. When the assessors use single series name from the app, Gunak collects them into a single assessment."
   } ],
   "paths" : {
-    "/api/login" : {
+    "/login" : {
       "post" : {
         "tags" : [ "Login" ],
         "summary" : "Some of API methods may be protected, hence the caller must login before calling those APIs.",
@@ -68,7 +68,7 @@
         }
       }
     },
-    "/api/ext/assessmentSummary" : {
+    "/assessmentSummary" : {
       "get" : {
         "tags" : [ "Assessment" ],
         "summary" : "Assessment Listing - Get facility assessments after the given date-time.",
@@ -130,7 +130,7 @@
         }
       }
     },
-    "/api/ext/assessment/{systemId}" : {
+    "/assessment/{systemId}" : {
       "get" : {
         "tags" : [ "Assessment" ],
         "summary" : "Get all checkpoint scores and indicators of an assessment.",
