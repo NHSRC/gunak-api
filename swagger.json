@@ -71,6 +71,9 @@
     "/ext/assessmentSummary" : {
       "get" : {
         "tags" : [ "Assessment" ],
+        "security" : [ {
+          "cookieAuth" : [ ]
+        } ],
         "summary" : "Assessment Listing - Get facility assessments after the given date-time.",
         "description" : "Get a list of facility assessments completed after a date. Each Assessment has an assessment date on which it was submitted to the system. Depending on the date-time value passed the API will return a paged list of all assessments submitted after that time (including exact match).",
         "parameters" : [ {
@@ -133,6 +136,9 @@
     "/ext/assessment/{systemId}" : {
       "get" : {
         "tags" : [ "Assessment" ],
+        "security" : [ {
+          "cookieAuth" : [ ]
+        } ],
         "summary" : "Get all checkpoint scores and indicators of an assessment.",
         "description" : "Each assessment has a globally unique systemId which identifies an assessment. This systemId can be retrived from the assessment listing api call.",
         "parameters" : [ {
@@ -163,6 +169,13 @@
     }
   },
   "components" : {
+    "securitySchemes" : {
+      "cookieAuth" : {
+        "type" : "apiKey",
+        "in" : "cookie",
+        "name" : "JSESSIONID"
+      }
+    },
     "parameters" : {
       "pageParam" : {
         "name" : "page",
