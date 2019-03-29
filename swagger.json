@@ -1,13 +1,13 @@
 {
   "openapi" : "3.0.0",
   "servers" : [ {
-    "url" : "https://uat.gunak.nhsrcindia.org/api/ext",
+    "url" : "https://uat.gunak.nhsrcindia.org/api",
     "description" : "User acceptance testing server (test data)"
   }, {
     "description" : "SwaggerHub API Auto Mocking",
     "url" : "https://virtserver.swaggerhub.com/gunak-nhsrc/gunak/1.0.0"
   }, {
-    "url" : "https://gunak.nhsrcindia.org/api/ext",
+    "url" : "https://gunak.nhsrcindia.org/api",
     "description" : "Production server (live data)"
   } ],
   "info" : {
@@ -68,7 +68,7 @@
         }
       }
     },
-    "/assessmentSummary" : {
+    "/ext/assessmentSummary" : {
       "get" : {
         "tags" : [ "Assessment" ],
         "summary" : "Assessment Listing - Get facility assessments after the given date-time.",
@@ -130,7 +130,7 @@
         }
       }
     },
-    "/assessment/{systemId}" : {
+    "/ext/assessment/{systemId}" : {
       "get" : {
         "tags" : [ "Assessment" ],
         "summary" : "Get all checkpoint scores and indicators of an assessment.",
