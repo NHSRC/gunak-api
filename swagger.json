@@ -455,6 +455,12 @@
               "$ref" : "#/components/schemas/ChecklistAssessment"
             }
           },
+          "indicators" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/IndicatorAssessment"
+            }
+          },
           "totalNumberOfCheckpoints" : {
             "type" : "integer",
             "description" : "Total number of checkpoints scored across checklists in this assessment"
