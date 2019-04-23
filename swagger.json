@@ -402,7 +402,7 @@
       },
       "ChecklistAssessment" : {
         "type" : "object",
-        "description" : "In an assessment tool, checklist consists of area of concerns. Correspondingly, in an assessment, their scores are grouped within a area of concerns.",
+        "description" : "In an assessment tool, checklist consists of area of concerns. Correspondingly, in an assessment, their scores are grouped within an area of concerns - if the assessment tool is compliance type (the other type is indicators, but both cannot exist together, given the design of assessment tools).",
         "properties" : {
           "name" : {
             "type" : "string",
@@ -421,6 +421,25 @@
           "numberOfCheckpoints" : {
             "type" : "integer",
             "description" : "Total number of checkpoints scored in this checklist"
+          }
+        }
+      },
+      "IndicatorAssessment" : {
+        "type" : "object",
+        "description" : "Assessment consists of indicators, if the assessment tool is indicator type (the other type is compliance, but both cannot exist together in an assessment, given the design of assessment tools).",
+        "properties" : {
+          "name" : {
+            "type" : "string",
+            "example" : null
+          },
+          "dataType" : {
+            "type" : "string",
+            "enum" : [ "Coded", "Numeric", "Percentage", "Date", "Month" ],
+            "description" : "In case of dataType being Coded, it can have three values [Yes, No, In Progress]."
+          },
+          "value" : {
+            "type" : "string",
+            "description" : "Since the indicator can have multiple data types, Gunak provides all the values as string. Based on the data type the should convert the value to appropriate data type. DataType of Month and Date are both in yyyy-MM-dd format. DataType of Percentage is a numeric value (without percentage sign)."
           }
         }
       },
