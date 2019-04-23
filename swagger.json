@@ -417,6 +417,10 @@
           "numberOfAreaOfConcerns" : {
             "type" : "integer",
             "description" : "Total number of area of concerns scored in this checklist"
+          },
+          "numberOfCheckpoints" : {
+            "type" : "integer",
+            "description" : "Total number of checkpoints scored in this checklist"
           }
         }
       },
