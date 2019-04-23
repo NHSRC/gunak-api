@@ -353,6 +353,10 @@
             "items" : {
               "$ref" : "#/components/schemas/CheckpointAssessment"
             }
+          },
+          "numberOfCheckpoints" : {
+            "type" : "integer",
+            "description" : "Total number of checkpoints scored in this measurable element, with its standard, within its area of concern, within its checklist"
           }
         }
       },
@@ -369,6 +373,10 @@
             "items" : {
               "$ref" : "#/components/schemas/MeasurableElementAssessment"
             }
+          },
+          "numberOfMeasurableElements" : {
+            "type" : "integer",
+            "description" : "Total number of measurable elements scored in this standard within this area of concern for this checklist"
           }
         }
       },
@@ -385,6 +393,10 @@
             "items" : {
               "$ref" : "#/components/schemas/StandardAssessment"
             }
+          },
+          "numberOfStandard" : {
+            "type" : "integer",
+            "description" : "Total number of standards scored in this area of concern within this checklist"
           }
         }
       },
@@ -401,6 +413,10 @@
             "items" : {
               "$ref" : "#/components/schemas/AreaOfConcernAssessment"
             }
+          },
+          "numberOfAreaOfConcerns" : {
+            "type" : "integer",
+            "description" : "Total number of area of concerns scored in this checklist"
           }
         }
       },
@@ -415,6 +431,14 @@
             "items" : {
               "$ref" : "#/components/schemas/ChecklistAssessment"
             }
+          },
+          "totalNumberOfCheckpoints" : {
+            "type" : "integer",
+            "description" : "Total number of checkpoints scored across checklists in this assessment"
+          },
+          "numberOfChecklists" : {
+            "type" : "integer",
+            "description" : "Number of checklists scored in this assessment"
           }
         }
       }
