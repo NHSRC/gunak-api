@@ -11,7 +11,7 @@
     "description" : "Production server (live data)"
   } ],
   "info" : {
-    "description" : "This is API documentation for Gunak Platform. Sample client codes can be generated from https://documenter.getpostman.com/view/695405/S1EUubE9",
+    "description" : "This is API documentation for Gunak Platform. Sample client codes can be generated from [here](https://documenter.getpostman.com/view/695405/S1EUubE9)",
     "version" : "1.0.0",
     "title" : "Gunak Platform",
     "contact" : {
