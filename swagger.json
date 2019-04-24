@@ -461,7 +461,7 @@
               "$ref" : "#/components/schemas/IndicatorAssessment"
             }
           },
-          "totalNumberOfCheckpoints" : {
+          "totalNumberOfScoredCheckpoints" : {
             "type" : "integer",
             "description" : "Total number of checkpoints scored across checklists in this assessment"
           },
