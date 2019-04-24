@@ -140,7 +140,7 @@
           "cookieAuth" : [ ]
         } ],
         "summary" : "Get all checkpoint scores or indicators of an assessment (depending on the setup of the assessment tool)",
-        "description" : "Each assessment has a globally unique systemId which identifies an assessment. This systemId can be retrieved from the assessment listing api call.",
+        "description" : "Each assessment has a globally unique systemId which identifies an assessment. This systemId can be retrieved from the assessment listing api call. While example displays both checklists and indicators within the same assessment, in reality the assessment tools are not setup like that.",
         "parameters" : [ {
           "name" : "systemId",
           "in" : "path",
