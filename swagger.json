@@ -139,8 +139,8 @@
         "security" : [ {
           "cookieAuth" : [ ]
         } ],
-        "summary" : "Get all checkpoint scores and indicators of an assessment.",
-        "description" : "Each assessment has a globally unique systemId which identifies an assessment. This systemId can be retrived from the assessment listing api call.",
+        "summary" : "Get all checkpoint scores or indicators of an assessment (depending on the setup of the assessment tool)",
+        "description" : "Each assessment has a globally unique systemId which identifies an assessment. This systemId can be retrieved from the assessment listing api call.",
         "parameters" : [ {
           "name" : "systemId",
           "in" : "path",
