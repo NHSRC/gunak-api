@@ -356,7 +356,8 @@
           },
           "numberOfCheckpoints" : {
             "type" : "integer",
-            "description" : "Total number of checkpoints scored in this measurable element, with its standard, within its area of concern, within its checklist"
+            "description" : "Total number of checkpoints scored in this measurable element, with its standard, within its area of concern, within its checklist",
+            "example" : "3"
           }
         }
       },
@@ -376,7 +377,8 @@
           },
           "numberOfMeasurableElements" : {
             "type" : "integer",
-            "description" : "Total number of measurable elements scored in this standard within this area of concern for this checklist"
+            "description" : "Total number of measurable elements scored in this standard within this area of concern for this checklist",
+            "example" : "9"
           }
         }
       },
@@ -394,9 +396,10 @@
               "$ref" : "#/components/schemas/StandardAssessment"
             }
           },
-          "numberOfStandard" : {
+          "numberOfStandards" : {
             "type" : "integer",
-            "description" : "Total number of standards scored in this area of concern within this checklist"
+            "description" : "Total number of standards scored in this area of concern within this checklist",
+            "example" : "30"
           }
         }
       },
@@ -416,11 +419,13 @@
           },
           "numberOfAreaOfConcerns" : {
             "type" : "integer",
-            "description" : "Total number of area of concerns scored in this checklist"
+            "description" : "Total number of area of concerns scored in this checklist",
+            "example" : "8"
           },
           "numberOfCheckpoints" : {
             "type" : "integer",
-            "description" : "Total number of checkpoints scored in this checklist"
+            "description" : "Total number of checkpoints scored in this checklist",
+            "example" : "25"
           }
         }
       },
@@ -463,11 +468,13 @@
           },
           "totalNumberOfScoredCheckpoints" : {
             "type" : "integer",
-            "description" : "Total number of checkpoints scored across checklists in this assessment"
+            "description" : "Total number of checkpoints scored across checklists in this assessment",
+            "example" : "100"
           },
           "numberOfChecklists" : {
             "type" : "integer",
-            "description" : "Number of checklists scored in this assessment"
+            "description" : "Number of checklists scored in this assessment",
+            "example" : "4"
           }
         }
       }
