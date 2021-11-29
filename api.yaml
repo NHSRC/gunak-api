@@ -1,0 +1,400 @@
+openapi: 3.0.0
+# Gunak Platform API
+servers:
+  # Added by API Auto Mocking Plugin
+  - description: SwaggerHub API Auto Mocking
+    url: https://virtserver.swaggerhub.com/gunak-nhsrc/gunak/1.0.0
+  - url: https://gunak.nhsrcindia.org/api
+    description: Production server (live data)
+info:
+  description: This is API documentation for Gunak Platform. Sample client codes can be generated from [here](https://documenter.getpostman.com/view/695405/S1EUubE9).
+  version: "1.0.0"
+  title: Gunak Platform
+  # termsOfService: 'http://swagger.io/terms/'
+  contact:
+    email: petmongrels@gmail.com
+  license:
+    name: AGPL 3.0
+    url: 'https://opensource.org/licenses/AGPL-3.0'
+tags:
+  - name: Login
+    description: Before accessing the API to get the assessment data the api should login. Gunak uses cookie based session management.
+  - name: Assessment
+    description: There are three key aspects of an assessment for an API user - Facility, Assessment Tool and Assessment Instance. An assessment is done for a facility. For doing the assessment an assessment tool is used. A program can have one or more assessment tools. An example is - Program = 'Laqshya', Assessment tool = 'NQAS', 'Laqshya Monthly', 'Laqshya Baseline'. Assessment tool consists of one or more checklists. Using the same example - NQAS has 'OT' and 'Labour Room'. Lastly a facility can be assessed multiple times using the same assessment tool. A single instance of assessment could be divided among more than one assessor. For example - one assessor could do 'OT' and other one could do 'Labour Room'. When the assessors use single series name from the app, Gunak collects them into a single assessment.
+paths:
+  /login:
+    post:
+      tags:
+        - Login
+      summary: Some of API methods may be protected, hence the caller must login before calling those APIs.
+      description: Post the login details to the server to obtain a valid cookie by name JSESSIONID. Include this cookie in other API calls that are protected.
+      responses:
+        '200':
+          description: Successful login
+        '401':
+          description: Login failed, email and password combination incorrect
+        'default':
+          $ref: '#/components/responses/APIError'
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+              required:
+                - email
+                - password
+  /ext/assessmentSummary:
+    get:
+      tags:
+        - Assessment
+      security:
+        - cookieAuth: []
+      summary: Assessment Listing - Get facility assessments after the given date-time.
+      description: Get a list of facility assessments completed after a date. Each Assessment has an assessment date on which it was submitted to the system. Depending on the date-time value passed the API will return a paged list of all assessments submitted after that time (including exact match).
+      parameters:
+        - name: assessmentEndDateTime
+          in: query
+          description: Timestamp (date and time) value. The assessments returned will be all have assessmentEndDateTime on or after this value. The datetime value should be specified in the following format - yyyy-MM-dd'T'HH:mm:ss.SSSZ, e.g. "2000-10-31T01:30:00.000Z".
+          required: true
+          schema:
+            type: string
+            format: date-time
+        - name: programName
+          in: query
+          description: Name of the program
+          required: true
+          schema:
+            type: string
+        - name: assessmentToolName
+          in: query
+          description: Name of the assessment tool under the program whose assessments should be returned
+          required: true
+          schema:
+            type: string
+        - name: assessmentTypeName
+          in: query
+          description: Name of the assessment type
+          required: false
+          schema:
+            type: string
+        - $ref: "#/components/parameters/pageParam"
+        - $ref: "#/components/parameters/pageSizeParam"
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/PageDetails'
+                properties:
+                  content:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/AssessmentSummary'
+        'default':
+          $ref: '#/components/responses/APIError'
+  /ext/assessment/{systemId}:
+    get:
+      tags:
+        - Assessment
+      security:
+        - cookieAuth: []
+      summary: Get all checkpoint scores or indicators of an assessment (depending on the setup of the assessment tool)
+      description: Each assessment has a globally unique systemId which identifies an assessment. This systemId can be retrieved from the assessment listing api call. While example displays both checklists and indicators within the same assessment, in reality the assessment tools are not setup like that.
+      parameters:
+        - name: systemId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: string
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Assessment'
+        default:
+          $ref: '#/components/responses/APIError'
+components:
+  securitySchemes:
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: JSESSIONID
+  parameters:
+    pageParam:
+      name: page
+      in: query
+      required: false
+      description: Page number, starts with 0. But please note you will always receive the first page which may not be what you may want.
+      schema:
+        type: integer
+        default: 0
+    pageSizeParam:
+      name: size
+      in: query
+      required: false
+      description: Number of resources to include in a page
+      schema:
+        type: integer
+        default: 25
+  responses:
+    APIError:
+      description: Gunak uses standard <a href="https://www.restapitutorial.com/httpstatuscodes.html" target="_blank">HTTP Status Codes</a> for communicating about various error codes. In the API error response please check the status code. Apart from the standard error, API error contains application specific error messages as well.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/APIError'
+  schemas:
+    APIError:
+      type: object
+      properties:
+        httpStatusCode:
+          type: integer
+          example: 405
+          description: For reference - <a href="https://www.restapitutorial.com/httpstatuscodes.html" target="_blank">HTTP Status Codes</a>
+        errorMessage:
+          type: string
+          description: Detailed error message which provides further details. In case of Internal Server Error (500), please report the error to support.
+    PageDetails:
+      type: object
+      description: Used when the number of resources in the response is large and cannot be sent in one response to the called. In such a case the results are returned in multiple pages. Along with the resources, PageDetails is part of response providing information to the user to navigate through all the pages to fetch all the resources. For the example - Assume there are 89 resources. Each page size is of 20 resources. Total number of pages = 89/20 = 5 (rounded up). Currently in page number 2 (0 based).
+      properties:
+        totalPages:
+          type: integer
+          description: Total number of pages of response
+          example: 5
+        last:
+          type: boolean
+          description: Is this the last page?
+          example: false
+        totalElements:
+          type: integer
+          description: Total number of resources in all the pages put together
+          example: 89
+        size:
+          type: integer
+          description: Maximum number of elements in a page
+          example: 20
+        number:
+          type: integer
+          description: The current page number (starts from 0, upto totalPages - 1)
+          example: 2
+        numberOfElements:
+          type: integer
+          description: Number of elements in the current page
+          example: 20
+    AssessmentSummary:
+      type: object
+      properties:
+        systemId:
+          type: string
+          example: '93885199-c27b-4c56-97f8-11717548a863'
+        program:
+          type: string
+          example: 'LAQSHYA'
+        assessmentTool:
+          type: string
+          example: 'NQAS'
+        assessmentType:
+          type: string
+          enum:
+            - Internal
+            - External
+            - Peer
+        assessmentSeries:
+          type: string
+          example: '20190210'
+        assessmentStartDate:
+          type: string
+          format: date-time
+          example: '2019-03-18T06:38:03.292Z'
+        assessmentEndDate:
+          type: string
+          format: date-time
+          example: '2019-03-18T10:38:03.292Z'
+        state:
+          type: string
+          example: 'Chhattisgarh'
+        district:
+          type: string
+          example: 'Bilaspur'
+        facility:
+          type: string
+          example: 'Bilaspur DH'
+        facilityType:
+          type: string
+          enum:
+            - District Hospital
+            - Primary Health Center
+            - Community Health Center
+            - Urban Primary Health Center
+            - Sub-Divisional/Taluka Hospital
+            - Medical College
+        facilityNIN:
+          type: string
+          example: 1111128383
+        assessmentNumber:
+          type: string
+    CheckpointAssessment:
+      type: object
+      description: Checkpoint is the small unit of assessment in an assessment tool. A checkpoint is scored as 0, 1 or 2. A checkpoint can also be marked as not-applicable by the assessor during the assessment and in that case the score is not provided. Checkpoints do not have a reference id like measurable element, standard or area of concern.
+      properties:
+        checkpoint:
+          type: string
+          example: 'There is no unauthorised occupation within the facility, nor there is encroachment on Hospital land'
+        score:
+          type: integer
+          enum:
+            - 0
+            - 1
+            - 2
+          example: 1
+        markedNotApplicable:
+          type: boolean
+        remarks:
+          type: string
+          example: There is a part of land under litigation.
+    MeasurableElementAssessment:
+      type: object
+      description: In an assessment tool, measurable element consists of checkpoints. Correspondingly, in an assessment, the measurable element consists of checkpoint scores.
+      properties:
+        reference:
+          type: string
+          example: 'A3.5'
+        checkpointAssessments:
+          type: array
+          items:
+            $ref: '#/components/schemas/CheckpointAssessment'
+        numberOfCheckpoints:
+          type: integer
+          description: Total number of checkpoints scored in this measurable element, with its standard, within its area of concern, within its checklist
+          example: '3'
+    StandardAssessment:
+      type: object
+      description: In an assessment tool, standard consists of measurable elements. Correspondingly, in an assessment, their scores are grouped within a measurable element.
+      properties:
+        reference:
+          type: string
+          example: 'A3'
+        measurableElements:
+          type: array
+          items:
+            $ref: '#/components/schemas/MeasurableElementAssessment'
+        numberOfMeasurableElements:
+          type: integer
+          description: Total number of measurable elements scored in this standard within this area of concern for this checklist
+          example: '9'
+    AreaOfConcernAssessment:
+      type: object
+      description: In an assessment tool, area of concern consists of standards. Correspondingly, in an assessment, their scores are grouped within a standards.
+      properties:
+        reference:
+          type: string
+          example: 'A'
+        standards:
+          type: array
+          items:
+            $ref: '#/components/schemas/StandardAssessment'
+        numberOfStandards:
+          type: integer
+          description: Total number of standards scored in this area of concern within this checklist
+          example: '30'
+    AreaOfConcernScore:
+      type: object
+      description: Scores of assessment aggregated to area of concerns and standards within them.
+      properties:
+        reference:
+          type: string
+          example: 'A'
+        score:
+          type: integer
+          example: 75
+        standardScores:
+          $ref: '#/components/schemas/StandardScore'
+    StandardScore:
+      type: object
+      description: Scores of assessment aggregated to standards.
+      additionalProperties:
+        type: integer
+      example:
+        A1: 50
+        A2: 54
+    ChecklistAssessment:
+      type: object
+      description: In an assessment tool, checklist consists of area of concerns. Correspondingly, in an assessment, their scores are grouped within an area of concerns - if the assessment tool is compliance type (the other type is indicators, but both cannot exist together, given the design of assessment tools).
+      properties:
+        name:
+          type: string
+          example: 'Labour Room'
+        areaOfConcerns:
+          type: array
+          items:
+            $ref: '#/components/schemas/AreaOfConcernAssessment'
+        score:
+          type: number
+          example: 65.5
+        numberOfAreaOfConcerns:
+          type: integer
+          description: Total number of area of concerns scored in this checklist
+          example: '8'
+        numberOfCheckpoints:
+          type: integer
+          description: Total number of checkpoints scored in this checklist
+          example: '25'
+    IndicatorAssessment:
+      type: object
+      description: Assessment consists of indicators, if the assessment tool is indicator type (the other type is compliance, but both cannot exist together in an assessment, given the design of assessment tools).
+      properties:
+        name:
+          type: string
+          example: '18. Facility conducts referral audit on Monthly basis'
+        dataType:
+          type: string
+          enum:
+            - Coded
+            - Numeric
+            - Percentage
+            - Date
+            - Month
+          description: In case of dataType being Coded, it can have three values [Yes, No, In Progress].
+          example: 'Coded'
+        value:
+          type: string
+          description: Since the indicator can have multiple data types, Gunak provides all the values as string. Based on the data type the should convert the value to appropriate data type. DataType of Month and Date are both in yyyy-MM-dd format. DataType of Percentage is a numeric value (without percentage sign).
+          example: 'No'
+    Assessment:
+      allOf:
+        - $ref: '#/components/schemas/AssessmentSummary'
+      type: object
+      properties:
+        checklists:
+          type: array
+          items:
+            $ref: '#/components/schemas/ChecklistAssessment'
+        areaOfConcernScores:
+          type: array
+          items:
+            $ref: '#/components/schemas/AreaOfConcernScore'
+        indicators:
+          type: array
+          items:
+            $ref: '#/components/schemas/IndicatorAssessment'
+        totalNumberOfScoredCheckpoints:
+          type: integer
+          description: Total number of checkpoints scored across checklists in this assessment
+          example: '100'
+        numberOfChecklists:
+          type: integer
+          description: Number of checklists scored in this assessment
+          example: '4'
