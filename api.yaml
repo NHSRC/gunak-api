@@ -3,9 +3,9 @@ openapi: 3.0.0
 servers:
   # Added by API Auto Mocking Plugin
   - description: SwaggerHub API Auto Mocking
-    url: https://virtserver.swaggerhub.com/gunak-nhsrc/gunak/1.0.0
-  - url: https://gunak.nhsrcindia.org/api
-    description: Production server (live data)
+    url: https://virtserver.swaggerhub.com/samanvay/gunak/1.0.0
+  - description: Production server (live data)
+    url: https://gunak.nhsrcindia.org/api
 info:
   description: This is API documentation for Gunak Platform. Sample client codes can be generated from [here](https://documenter.getpostman.com/view/695405/S1EUubE9).
   version: "1.0.0"
