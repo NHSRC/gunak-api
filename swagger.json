@@ -2,7 +2,7 @@
   "openapi" : "3.0.0",
   "servers" : [ {
     "url" : "https://uat.gunak.nhsrcindia.org/api",
-    "description" : "User acceptance testing server (test data)"
+    "description" : "FOO User acceptance testing server (test data)"
   }, {
     "description" : "SwaggerHub API Auto Mocking",
     "url" : "https://virtserver.swaggerhub.com/gunak-nhsrc/gunak/1.0.0"
