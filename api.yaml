@@ -57,7 +57,7 @@ paths:
       security:
         - cookieAuth: []
       summary: Assessment Listing - Get facility assessments after the given date-time.
-      description: Get a list of facility assessments completed after a date. Each Assessment has an assessment date on which it was submitted to the system. Depending on the date-time value passed the API will return a paged list of all assessments submitted after that time (including exact match). You can change the page number to access subsequent pages of response.
+      description: Get a list of facility assessments completed after a date. Each Assessment has an assessment date on which it was submitted to the system. Depending on the date-time value passed the API will return a paged list of all assessments submitted after that time (excluding the exact match). You can change the page number to access subsequent pages of response or (not and) you can provide the assessmentEndDateTime as the last summary resource's assessmentEndDateTime value.
       parameters:
         - name: assessmentEndDateTime
           in: query
