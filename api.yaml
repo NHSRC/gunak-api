@@ -19,8 +19,10 @@ info:
 tags:
   - name: Login
     description: Before accessing the API to get the assessment data the api should login. Gunak uses cookie based session management.
+  - name: AssessmentTool
+    description: For doing the assessment an assessment tool is used. A program can have one or more assessment tools. An example is - Program = 'Laqshya', Assessment tool = 'NQAS', 'Laqshya Monthly', 'Laqshya Baseline'. Assessment tool consists of one or more checklists or set of indicators depending on the type of assessment tool (COMPLIANCE or INDICATOR). Using the same example - NQAS, which is of type COMPLIANCE, has 'OT' and 'Labour Room' checklists.
   - name: Assessment
-    description: There are three key aspects of an assessment for an API user - Facility, Assessment Tool and Assessment Instance. An assessment is done for a facility. For doing the assessment an assessment tool is used. A program can have one or more assessment tools. An example is - Program = 'Laqshya', Assessment tool = 'NQAS', 'Laqshya Monthly', 'Laqshya Baseline'. Assessment tool consists of one or more checklists. Using the same example - NQAS has 'OT' and 'Labour Room'. Lastly a facility can be assessed multiple times using the same assessment tool. A single instance of assessment could be divided among more than one assessor. For example - one assessor could do 'OT' and other one could do 'Labour Room'. When the assessors use single series name from the app, Gunak collects them into a single assessment.
+    description: There are three key aspects of an assessment for an API user - Facility, Assessment Tool and Assessment Instance. An assessment is done for a facility. For doing the assessment an assessment tool is used. A single instance of assessment could be divided among more than one assessor. For example - one assessor could do 'OT' and other one could do 'Labour Room'. When the assessors use single series name from the app, Gunak collects them into a single assessment.
 paths:
   /login:
     post:
@@ -50,13 +52,72 @@ paths:
               required:
                 - email
                 - password
+  /ext/assessmentTool:
+    get:
+      tags:
+        - AssessmentTool
+      summary: Get a list of assessment tools (universal or by state).
+      description: Get a list of assessment tools updated after a given date. Each Assessment tool has a last modified date on which it was last changed. Depending on the date-time value passed the API will return a list of all assessment tools updated after that time (excluding the exact match). To get universal assessment tools do not pass the stateName.
+      parameters:
+        - name: fromDate
+          in: query
+          description: Timestamp (date and time) value. The datetime value should be specified in the following format - yyyy-MM-dd'T'HH:mm:ss.SSSZ, e.g. "2000-10-31T01:30:00.000Z".
+          required: true
+          schema:
+            type: string
+            format: date-time
+        - name: stateName
+          in: query
+          description: Name of the state
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                properties:
+                  content:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/AssessmentToolSummary'
+        'default':
+          $ref: '#/components/responses/APIError'
+  /ext/assessmentTool/{systemId}:
+    get:
+      tags:
+        - AssessmentTool
+      summary: All the details of an assessment tool which is a unit of assessment.
+      description: Get all the details of an assessment with all checkpoints, measurable elements, standards, areas of concern, and checklists. All the constituents are arranged as they are available in the app or excel files.
+      parameters:
+        - name: systemId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: string
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                properties:
+                  content:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/AssessmentTool'
+        'default':
+          $ref: '#/components/responses/APIError'
   /ext/assessmentSummary:
     get:
       tags:
         - Assessment
       security:
         - cookieAuth: []
-      summary: Assessment Listing - Get facility assessments after the given date-time.
+      summary: Get facility assessments after the given date-time.
       description: Get a list of facility assessments completed after a date. Each Assessment has an assessment date on which it was submitted to the system. Depending on the date-time value passed the API will return a paged list of all assessments submitted after that time (excluding the exact match). You can change the page number to access subsequent pages of response or (not and) you can provide the assessmentEndDateTime as the last summary resource's assessmentEndDateTime value.
       parameters:
         - name: assessmentEndDateTime
@@ -116,6 +177,7 @@ paths:
           schema:
             type: string
             format: string
+            example: 'bf29ff04-774b-4f38-bc20-ed98de4d8918'
       responses:
         '200':
           description: successful operation
@@ -235,17 +297,53 @@ components:
         facilityType:
           type: string
           enum:
-            - District Hospital
-            - Primary Health Center
+            - 100-500 Bedded Hospital
+            - <100 Bedded Hospital
+            - ">500 Bedded Hospital"
+            - Ayush Dispensaries
+            - Civil Hospital/General Hospital
             - Community Health Center
-            - Urban Primary Health Center
-            - Sub-Divisional/Taluka Hospital
-            - Medical College
+            - Dispensaries
+            - District Hospital
+            - H & W C
+            - Health and Wellness Centre
+            - M&CW Center
+            - Maternity Home
+            - Medical Colleges Hospital
+            - Others
+            - Primary Health Centre
+            - Referral Hospital
+            - Sub-District Hospital
+            - SubCentre
+            - Urban Health Centre
+            - Urban Health Posts
+            - Women Hospital
         facilityNIN:
           type: string
           example: 1111128383
         assessmentNumber:
           type: string
+    AssessmentToolSummary:
+      allOf:
+        - $ref: '#/components/schemas/AssessmentToolComponent'
+      type: object
+      properties:
+        program:
+          type: string
+          example: 'LAQSHYA'
+        assessmentToolType:
+          type: string
+          example: 'COMPLIANCE'
+        lastModifiedDate:
+          type: string
+          format: date-time
+          example: '2019-03-18T10:38:03.292Z'
+        state:
+          type: string
+          example: 'Chhattisgarh'
+        universal:
+          type: boolean
+          example: true
     CheckpointAssessment:
       type: object
       description: Checkpoint is the small unit of assessment in an assessment tool. A checkpoint is scored as 0, 1 or 2. A checkpoint can also be marked as not-applicable by the assessor during the assessment and in that case the score is not provided. Checkpoints do not have a reference id like measurable element, standard or area of concern.
@@ -352,6 +450,82 @@ components:
           type: integer
           description: Total number of checkpoints scored in this checklist
           example: '25'
+    ChecklistAssessmentTool:
+      allOf:
+        - $ref: '#/components/schemas/AssessmentToolComponent'
+      type: object
+      description: Each assessment tool of type COMPLIANCE has a list of checklist (also called department sometimes). A checklist consists of area of concerns.
+      properties:
+        areaOfConcerns:
+          type: array
+          items:
+            $ref: '#/components/schemas/AreaOfConcernAssessmentTool'
+    IndicatorAssessmentTool:
+      allOf:
+        - $ref: '#/components/schemas/AssessmentToolComponent'
+      type: object
+      description: Each assessment tool of type INDICATOR has a list of indicators.
+      properties:
+        description:
+          type: string
+        dataType:
+          type: string
+          enum:
+            - Numeric
+            - Percentage
+            - Date
+            - Month
+            - Coded
+        codedValues:
+          type: string
+          description: when the data type is Coded
+          example: ["Yes", "No", "In Progress"]
+    AreaOfConcernAssessmentTool:
+      allOf:
+        - $ref: '#/components/schemas/AssessmentToolReferenceComponent'
+      type: object
+      description: Each area of concern has a list of standards.
+      properties:
+        areaOfConcerns:
+          type: array
+          items:
+            $ref: '#/components/schemas/StandardAssessmentTool'
+    StandardAssessmentTool:
+      allOf:
+        - $ref: '#/components/schemas/AssessmentToolReferenceComponent'
+      type: object
+      description: Each standard has a list of measurable elements.
+      properties:
+        measurableElements:
+          type: array
+          items:
+            $ref: '#/components/schemas/MeasurableElementAssessmentTool'
+    MeasurableElementAssessmentTool:
+      allOf:
+        - $ref: '#/components/schemas/AssessmentToolReferenceComponent'
+      type: object
+      description: Each measurable element has a list of checkpoints.
+      properties:
+        checkpoints:
+          type: array
+          items:
+            $ref: '#/components/schemas/CheckpointAssessmentTool'
+    CheckpointAssessmentTool:
+      allOf:
+        - $ref: '#/components/schemas/AssessmentToolComponent'
+      type: object
+      description: Checkpoints are the fields in an assessment tool which the assessors provide their score on. Also note that checkpoint doesn't have any reference unlike Area of concern, standard, and measurable element. The assessors is provided with means of verification as a help. The method of assessment can be based on one of more of observation, staff interview, patient interview, and record review.
+      properties:
+        meansOfVerification:
+          type: string
+        byObservation:
+          type: boolean
+        byStaffInterview:
+          type: boolean
+        byPatientInterview:
+          type: boolean
+        byRecordReview:
+          type: boolean
     IndicatorAssessment:
       type: object
       description: Assessment consists of indicators, if the assessment tool is indicator type (the other type is compliance, but both cannot exist together in an assessment, given the design of assessment tools).
@@ -373,6 +547,19 @@ components:
           type: string
           description: Since the indicator can have multiple data types, Gunak provides all the values as string. Based on the data type the should convert the value to appropriate data type. DataType of Month and Date are both in yyyy-MM-dd format. DataType of Percentage is a numeric value (without percentage sign).
           example: 'No'
+    AssessmentTool:
+      allOf:
+        - $ref: '#/components/schemas/AssessmentToolSummary'
+      type: object
+      properties:
+        checklists:
+          type: array
+          items:
+            $ref: '#/components/schemas/ChecklistAssessmentTool'
+        indicators:
+          type: array
+          items:
+            $ref: '#/components/schemas/IndicatorAssessmentTool'
     Assessment:
       allOf:
         - $ref: '#/components/schemas/AssessmentSummary'
@@ -398,3 +585,21 @@ components:
           type: integer
           description: Number of checklists scored in this assessment
           example: '4'
+    AssessmentToolComponent:
+      type: object
+      properties:
+        inactive:
+          type: boolean
+          example: false
+        systemId:
+          type: string
+          example: '60785eec-4b44-4336-8964-1d20a3bb8474'
+        name:
+          type: string
+    AssessmentToolReferenceComponent:
+      allOf:
+        - $ref: '#/components/schemas/AssessmentToolComponent'
+      type: object
+      properties:
+        reference:
+          type: string
