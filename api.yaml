@@ -558,6 +558,8 @@ components:
       properties:
         areaOfConcerns:
           type: array
+          items:
+            type: string
           example: ['fffc1b91-df7a-403a-a64d-08b4281bc3d7', 'b8dc4122-14dd-48ec-9ec8-1345543c1455']
           description: 'So far a checklist contains all the areas of concern in an assessment tool, but the system has flexibility for cases where this may not be the case. This field can be ignored.'
         assessmentTool:
@@ -570,6 +572,8 @@ components:
       properties:
         checklists:
           type: array
+          items:
+            type: string
           example: ['fffc1b91-df7a-403a-a64d-08b4281bc3d7', 'b8dc4122-14dd-48ec-9ec8-1345543c1455']
           description: 'So far a checklist contains all the areas of concern in an assessment tool, but the system has flexibility for cases where this may not be the case. This field can be ignored.'
     Standard:
@@ -744,82 +748,6 @@ components:
           type: integer
           description: Total number of checkpoints scored in this checklist
           example: '25'
-    ChecklistAssessmentTool:
-      allOf:
-        - $ref: '#/components/schemas/AssessmentToolComponent'
-      type: object
-      description: Each assessment tool of type COMPLIANCE has a list of checklist (also called department sometimes). A checklist consists of area of concerns.
-      properties:
-        areaOfConcerns:
-          type: array
-          items:
-            $ref: '#/components/schemas/AreaOfConcernAssessmentTool'
-    IndicatorAssessmentTool:
-      allOf:
-        - $ref: '#/components/schemas/AssessmentToolComponent'
-      type: object
-      description: Each assessment tool of type INDICATOR has a list of indicators.
-      properties:
-        description:
-          type: string
-        dataType:
-          type: string
-          enum:
-            - Numeric
-            - Percentage
-            - Date
-            - Month
-            - Coded
-        codedValues:
-          type: string
-          description: when the data type is Coded
-          example: ["Yes", "No", "In Progress"]
-    AreaOfConcernAssessmentTool:
-      allOf:
-        - $ref: '#/components/schemas/AssessmentToolReferenceComponent'
-      type: object
-      description: Each area of concern has a list of standards.
-      properties:
-        areaOfConcerns:
-          type: array
-          items:
-            $ref: '#/components/schemas/StandardAssessmentTool'
-    StandardAssessmentTool:
-      allOf:
-        - $ref: '#/components/schemas/AssessmentToolReferenceComponent'
-      type: object
-      description: Each standard has a list of measurable elements.
-      properties:
-        measurableElements:
-          type: array
-          items:
-            $ref: '#/components/schemas/MeasurableElementAssessmentTool'
-    MeasurableElementAssessmentTool:
-      allOf:
-        - $ref: '#/components/schemas/AssessmentToolReferenceComponent'
-      type: object
-      description: Each measurable element has a list of checkpoints.
-      properties:
-        checkpoints:
-          type: array
-          items:
-            $ref: '#/components/schemas/CheckpointAssessmentTool'
-    CheckpointAssessmentTool:
-      allOf:
-        - $ref: '#/components/schemas/AssessmentToolComponent'
-      type: object
-      description: Checkpoints are the fields in an assessment tool which the assessors provide their score on. Also note that checkpoint doesn't have any reference unlike Area of concern, standard, and measurable element. The assessors is provided with means of verification as a help. The method of assessment can be based on one of more of observation, staff interview, patient interview, and record review.
-      properties:
-        meansOfVerification:
-          type: string
-        byObservation:
-          type: boolean
-        byStaffInterview:
-          type: boolean
-        byPatientInterview:
-          type: boolean
-        byRecordReview:
-          type: boolean
     IndicatorAssessment:
       type: object
       description: Assessment consists of indicators, if the assessment tool is indicator type (the other type is compliance, but both cannot exist together in an assessment, given the design of assessment tools).
