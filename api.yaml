@@ -646,9 +646,10 @@ components:
       type: object
       description: Checkpoint is the small unit of assessment in an assessment tool. A checkpoint is scored as 0, 1 or 2. A checkpoint can also be marked as not-applicable by the assessor during the assessment and in that case the score is not provided. Checkpoints do not have a reference id like measurable element, standard or area of concern.
       properties:
-        checkpoint:
+        systemId:
           type: string
-          example: 'There is no unauthorised occupation within the facility, nor there is encroachment on Hospital land'
+          example: 'd2649a85-2106-49c0-a995-266f4fb05fcc'
+          description: 'System id of the checkpoint'
         score:
           type: integer
           enum:
@@ -665,10 +666,11 @@ components:
       type: object
       description: In an assessment tool, measurable element consists of checkpoints. Correspondingly, in an assessment, the measurable element consists of checkpoint scores.
       properties:
-        reference:
+        systemId:
           type: string
-          example: 'A3.5'
-        checkpointAssessments:
+          example: 'ad9f55b8-189f-4ad1-adc3-16c842be397e'
+          description: 'System id of measurable element'
+        checkpoints:
           type: array
           items:
             $ref: '#/components/schemas/CheckpointAssessment'
@@ -680,9 +682,10 @@ components:
       type: object
       description: In an assessment tool, standard consists of measurable elements. Correspondingly, in an assessment, their scores are grouped within a measurable element.
       properties:
-        reference:
+        systemId:
           type: string
-          example: 'A3'
+          example: 'c1e121a3-ca48-46eb-9963-a5f53565e3a8'
+          description: 'System id of the standard'
         measurableElements:
           type: array
           items:
@@ -695,9 +698,10 @@ components:
       type: object
       description: In an assessment tool, area of concern consists of standards. Correspondingly, in an assessment, their scores are grouped within a standards.
       properties:
-        reference:
+        systemId:
           type: string
-          example: 'A'
+          example: '72a7235b-a17d-42b8-a30d-9862c7424387'
+          description: 'System id of the area of concern'
         standards:
           type: array
           items:
@@ -730,9 +734,10 @@ components:
       type: object
       description: In an assessment tool, checklist consists of area of concerns. Correspondingly, in an assessment, their scores are grouped within an area of concerns - if the assessment tool is compliance type (the other type is indicators, but both cannot exist together, given the design of assessment tools).
       properties:
-        name:
+        systemId:
           type: string
-          example: 'Labour Room'
+          example: 'f2e98181-cc12-471e-bb5f-d4c3d8d50db5'
+          description: 'System id of the checklist'
         areaOfConcerns:
           type: array
           items:
@@ -750,7 +755,7 @@ components:
           example: '25'
     IndicatorAssessment:
       type: object
-      description: Assessment consists of indicators, if the assessment tool is indicator type (the other type is compliance, but both cannot exist together in an assessment, given the design of assessment tools).
+      description: Assessment consists of indicators, if the assessment tool is indicator type (the other type is compliance, but both cannot exist together in an assessment, given the design of assessment tools). Each indicator value in the assessment is represented by this schema.
       properties:
         systemId:
           type: string
@@ -789,6 +794,7 @@ components:
           description: Number of checklists scored in this assessment
           example: '4'
     AssessmentToolComponent:
+      description: 'This used by other schema items, not used directly'
       type: object
       properties:
         systemId:
@@ -808,6 +814,7 @@ components:
           format: date-time
           example: '2019-03-18T10:38:03.292Z'
     AssessmentToolReferenceComponent:
+      description: 'This used by other schema items, not used directly'
       allOf:
         - $ref: '#/components/schemas/AssessmentToolComponent'
       type: object
