@@ -52,11 +52,69 @@ paths:
               required:
                 - email
                 - password
+  /ext/assessmentType:
+    get:
+      tags:
+        - Assessment Type
+      summary: Get a list of assessment types.
+      description: Get a list of assessment types updated after a given date. Each assessment type has a last modified date on which it was last changed. Depending on the date-time value passed the API will return a list of all assessment type updated after that time (excluding the exact match).
+      parameters:
+        - name: fromDate
+          in: query
+          description: Timestamp (date and time) value. The datetime value should be specified in the following format - yyyy-MM-dd'T'HH:mm:ss.SSSZ, e.g. "2000-10-31T01:30:00.000Z".
+          required: true
+          schema:
+            type: string
+            format: date-time
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/PageDetails'
+                properties:
+                  content:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/AssessmentType'
+        'default':
+          $ref: '#/components/responses/APIError'
+  /ext/program:
+    get:
+      tags:
+        - Program
+      summary: Get a list of programs.
+      description: Get a list of programs updated after a given date. Each program has a last modified date on which it was last changed. Depending on the date-time value passed the API will return a list of all programs updated after that time (excluding the exact match).
+      parameters:
+        - name: fromDate
+          in: query
+          description: Timestamp (date and time) value. The datetime value should be specified in the following format - yyyy-MM-dd'T'HH:mm:ss.SSSZ, e.g. "2000-10-31T01:30:00.000Z".
+          required: true
+          schema:
+            type: string
+            format: date-time
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/PageDetails'
+                properties:
+                  content:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Program'
+        'default':
+          $ref: '#/components/responses/APIError'
   /ext/assessmentTool:
     get:
       tags:
         - AssessmentTool
-      summary: Get a list of assessment tools (universal or by state).
+      summary: Get a list of assessment tools.
       description: Get a list of assessment tools updated after a given date. Each Assessment tool has a last modified date on which it was last changed. Depending on the date-time value passed the API will return a list of all assessment tools updated after that time (excluding the exact match). To get universal assessment tools do not pass the stateName.
       parameters:
         - name: fromDate
@@ -66,49 +124,193 @@ paths:
           schema:
             type: string
             format: date-time
-        - name: stateName
-          in: query
-          description: Name of the state
-          required: false
-          schema:
-            type: string
       responses:
         '200':
           description: successful operation
           content:
             application/json:
               schema:
-                properties:
-                  content:
-                    type: array
-                    items:
-                      $ref: '#/components/schemas/AssessmentToolSummary'
-        'default':
-          $ref: '#/components/responses/APIError'
-  /ext/assessmentTool/{systemId}:
-    get:
-      tags:
-        - AssessmentTool
-      summary: All the details of an assessment tool which is a unit of assessment.
-      description: Get all the details of an assessment with all checkpoints, measurable elements, standards, areas of concern, and checklists. All the constituents are arranged as they are available in the app or excel files.
-      parameters:
-        - name: systemId
-          in: path
-          required: true
-          schema:
-            type: string
-            format: string
-      responses:
-        '200':
-          description: successful operation
-          content:
-            application/json:
-              schema:
+                allOf:
+                  - $ref: '#/components/schemas/PageDetails'
                 properties:
                   content:
                     type: array
                     items:
                       $ref: '#/components/schemas/AssessmentTool'
+        'default':
+          $ref: '#/components/responses/APIError'
+  /ext/checklist:
+    get:
+      tags:
+        - Checklist
+      summary: Get a list of checklists.
+      description: Get a list of checklists updated after a given date. Each checklist has a last modified date on which it was last changed. Depending on the date-time value passed the API will return a list of all checklists updated after that time (excluding the exact match).
+      parameters:
+        - name: fromDate
+          in: query
+          description: Timestamp (date and time) value. The datetime value should be specified in the following format - yyyy-MM-dd'T'HH:mm:ss.SSSZ, e.g. "2000-10-31T01:30:00.000Z".
+          required: true
+          schema:
+            type: string
+            format: date-time
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/PageDetails'
+                properties:
+                  content:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Checklist'
+        'default':
+          $ref: '#/components/responses/APIError'
+  /ext/areaOfConcern:
+    get:
+      tags:
+        - Area of concern
+      summary: Get a list of area of concerns.
+      description: Get a list of area of concerns updated after a given date. Each area of concerns has a last modified date on which it was last changed. Depending on the date-time value passed the API will return a list of all area of concerns updated after that time (excluding the exact match).
+      parameters:
+        - name: fromDate
+          in: query
+          description: Timestamp (date and time) value. The datetime value should be specified in the following format - yyyy-MM-dd'T'HH:mm:ss.SSSZ, e.g. "2000-10-31T01:30:00.000Z".
+          required: true
+          schema:
+            type: string
+            format: date-time
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/PageDetails'
+                properties:
+                  content:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/AreaOfConcern'
+        'default':
+          $ref: '#/components/responses/APIError'
+  /ext/standard:
+    get:
+      tags:
+        - Standard
+      summary: Get a list of standards.
+      description: Get a list of standards updated after a given date. Each standard has a last modified date on which it was last changed. Depending on the date-time value passed the API will return a list of all standards updated after that time (excluding the exact match).
+      parameters:
+        - name: fromDate
+          in: query
+          description: Timestamp (date and time) value. The datetime value should be specified in the following format - yyyy-MM-dd'T'HH:mm:ss.SSSZ, e.g. "2000-10-31T01:30:00.000Z".
+          required: true
+          schema:
+            type: string
+            format: date-time
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/PageDetails'
+                properties:
+                  content:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Standard'
+        'default':
+          $ref: '#/components/responses/APIError'
+  /ext/measurableElement:
+    get:
+      tags:
+        - Measurable Element
+      summary: Get a list of measurable elements.
+      description: Get a list of measurable elements updated after a given date. Each measurable element has a last modified date on which it was last changed. Depending on the date-time value passed the API will return a list of all measurable elements updated after that time (excluding the exact match).
+      parameters:
+        - name: fromDate
+          in: query
+          description: Timestamp (date and time) value. The datetime value should be specified in the following format - yyyy-MM-dd'T'HH:mm:ss.SSSZ, e.g. "2000-10-31T01:30:00.000Z".
+          required: true
+          schema:
+            type: string
+            format: date-time
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/PageDetails'
+                properties:
+                  content:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/MeasurableElement'
+        'default':
+          $ref: '#/components/responses/APIError'
+  /ext/checkpoint:
+    get:
+      tags:
+        - Checkpoint
+      summary: Get a list of checkpoints.
+      description: Get a list of checkpoints updated after a given date. Each checkpoint has a last modified date on which it was last changed. Depending on the date-time value passed the API will return a list of all checkpoints updated after that time (excluding the exact match).
+      parameters:
+        - name: fromDate
+          in: query
+          description: Timestamp (date and time) value. The datetime value should be specified in the following format - yyyy-MM-dd'T'HH:mm:ss.SSSZ, e.g. "2000-10-31T01:30:00.000Z".
+          required: true
+          schema:
+            type: string
+            format: date-time
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/PageDetails'
+                properties:
+                  content:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Checkpoint'
+        'default':
+          $ref: '#/components/responses/APIError'
+  /ext/indicatorDefinition:
+    get:
+      tags:
+        - Indicator Definition
+      summary: Get a list of indicator definitions.
+      description: Get a list of indicator definitions updated after a given date. Each indicator definition has a last modified date on which it was last changed. Depending on the date-time value passed the API will return a list of all indicator definitions updated after that time (excluding the exact match).
+      parameters:
+        - name: fromDate
+          in: query
+          description: Timestamp (date and time) value. The datetime value should be specified in the following format - yyyy-MM-dd'T'HH:mm:ss.SSSZ, e.g. "2000-10-31T01:30:00.000Z".
+          required: true
+          schema:
+            type: string
+            format: date-time
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/PageDetails'
+                properties:
+                  content:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/IndicatorDefinition'
         'default':
           $ref: '#/components/responses/APIError'
   /ext/assessmentSummary:
@@ -127,21 +329,15 @@ paths:
           schema:
             type: string
             format: date-time
-        - name: programName
+        - name: assessmentTool
           in: query
-          description: Name of the program
+          description: System id of the assessment tool
           required: true
           schema:
             type: string
-        - name: assessmentToolName
+        - name: assessmentType
           in: query
-          description: Name of the assessment tool under the program whose assessments should be returned
-          required: true
-          schema:
-            type: string
-        - name: assessmentTypeName
-          in: query
-          description: Name of the assessment type
+          description: System id of assessment type (use this to filter assessments)
           required: false
           schema:
             type: string
@@ -264,16 +460,13 @@ components:
           example: '93885199-c27b-4c56-97f8-11717548a863'
         program:
           type: string
-          example: 'LAQSHYA'
+          example: 'bfb263a8-a2f4-4793-bb4f-f6819352f2db'
         assessmentTool:
           type: string
-          example: 'NQAS'
+          example: 'd91d760c-f93f-4e46-be62-bb27d64415ab'
         assessmentType:
           type: string
-          enum:
-            - Internal
-            - External
-            - Peer
+          example: 'd91d760c-f93f-4e46-be62-bb27d64415ab'
         assessmentSeries:
           type: string
           example: '20190210'
@@ -323,27 +516,128 @@ components:
           example: 1111128383
         assessmentNumber:
           type: string
-    AssessmentToolSummary:
+        inactive:
+          type: boolean
+    AssessmentType:
       allOf:
         - $ref: '#/components/schemas/AssessmentToolComponent'
       type: object
       properties:
         program:
           type: string
-          example: 'LAQSHYA'
+          example: '3c331adb-7392-4f2f-8c57-c7ef1408fa69'
+    Program:
+      allOf:
+        - $ref: '#/components/schemas/AssessmentToolComponent'
+      type: object
+    AssessmentTool:
+      allOf:
+        - $ref: '#/components/schemas/AssessmentToolComponent'
+      type: object
+      properties:
+        program:
+          type: string
+          example: 'ce6b29a0-d781-4ad0-961f-2486e8cca156'
+        overridingAssessmentTool:
+          type: string
+          description: 'When state specific assessment tools override the Universal assessment tools then this field specifies the system id of the universal assessment tool. If no universal assessment tools are overridden then this field is null'
+          example: 'c042adf2-69f3-47fb-8d1d-8a822a9563b9'
         assessmentToolType:
           type: string
+          enum:
+            - 'COMPLIANCE'
+            - 'INDICATOR'
           example: 'COMPLIANCE'
-        lastModifiedDate:
-          type: string
-          format: date-time
-          example: '2019-03-18T10:38:03.292Z'
         state:
           type: string
           example: 'Chhattisgarh'
-        universal:
+    Checklist:
+      allOf:
+        - $ref: '#/components/schemas/AssessmentToolComponent'
+      type: object
+      properties:
+        areaOfConcerns:
+          type: array
+          example: ['fffc1b91-df7a-403a-a64d-08b4281bc3d7', 'b8dc4122-14dd-48ec-9ec8-1345543c1455']
+          description: 'So far a checklist contains all the areas of concern in an assessment tool, but the system has flexibility for cases where this may not be the case. This field can be ignored.'
+        assessmentTool:
+          type: string
+          example: 'c042adf2-69f3-47fb-8d1d-8a822a9563b9'
+    AreaOfConcern:
+      allOf:
+        - $ref: '#/components/schemas/AssessmentToolReferenceComponent'
+      type: object
+      properties:
+        checklists:
+          type: array
+          example: ['fffc1b91-df7a-403a-a64d-08b4281bc3d7', 'b8dc4122-14dd-48ec-9ec8-1345543c1455']
+          description: 'So far a checklist contains all the areas of concern in an assessment tool, but the system has flexibility for cases where this may not be the case. This field can be ignored.'
+    Standard:
+      allOf:
+        - $ref: '#/components/schemas/AssessmentToolReferenceComponent'
+      type: object
+      properties:
+        areaOfConcern:
+          type: string
+          description: 'System id of the area of concern to which this standard belongs to'
+          example: 'fffc1b91-df7a-403a-a64d-08b4281bc3d7'
+    MeasurableElement:
+      allOf:
+        - $ref: '#/components/schemas/AssessmentToolReferenceComponent'
+      type: object
+      properties:
+        standard:
+          type: string
+          description: 'System id of the standard to which this measurable element belongs to'
+          example: '35bb4f4e-73e3-482c-9d15-c98949382c2d'
+    Checkpoint:
+      allOf:
+        - $ref: '#/components/schemas/AssessmentToolComponent'
+      type: object
+      properties:
+        meansOfVerification:
+          type: string
+        byObservation:
           type: boolean
-          example: true
+        byStaffInterview:
+          type: boolean
+        byPatientInterview:
+          type: boolean
+        byRecordReview:
+          type: boolean
+        sortOrder:
+          type: number
+          description: 'Provides the (ascending) order in which the checkpoints are arranged within a measurable element'
+          example: 1
+        measurableElement:
+          type: string
+          description: 'System id of the measurable element to which this checkpoint belongs to'
+          example: '81d1b92b-b0e3-46d9-bfb4-e9a0fa1ac998'
+    IndicatorDefinition:
+      allOf:
+        - $ref: '#/components/schemas/AssessmentToolComponent'
+      type: object
+      properties:
+        description:
+          type: string
+        dataType:
+          type: string
+          enum:
+            - Numeric
+            - Percentage
+            - Date
+            - Month
+            - Coded
+        codedValues:
+          type: string
+          description: when the data type is Coded
+          example: [ "Yes", "No", "In Progress" ]
+        assessmentTool:
+          description: 'System id of the assessment tool to which this indicator definition belongs to'
+        sortOrder:
+          type: number
+          description: 'Provides the (ascending) order in which the indicator definitions are arranged within a assessment tool'
+          example: 100
     CheckpointAssessment:
       type: object
       description: Checkpoint is the small unit of assessment in an assessment tool. A checkpoint is scored as 0, 1 or 2. A checkpoint can also be marked as not-applicable by the assessor during the assessment and in that case the score is not provided. Checkpoints do not have a reference id like measurable element, standard or area of concern.
@@ -530,36 +824,17 @@ components:
       type: object
       description: Assessment consists of indicators, if the assessment tool is indicator type (the other type is compliance, but both cannot exist together in an assessment, given the design of assessment tools).
       properties:
-        name:
+        systemId:
           type: string
-          example: '18. Facility conducts referral audit on Monthly basis'
-        dataType:
+          example: '2678730d-ed27-48d6-9bfb-ab6688a85d10'
+        indicatorDefinition:
           type: string
-          enum:
-            - Coded
-            - Numeric
-            - Percentage
-            - Date
-            - Month
-          description: In case of dataType being Coded, it can have three values [Yes, No, In Progress].
-          example: 'Coded'
+          example: 'ccfbbfa8-ba5b-48c2-a860-5b4fb6f86680'
+          description: 'System id of the indicator definition of this indicator'
         value:
           type: string
           description: Since the indicator can have multiple data types, Gunak provides all the values as string. Based on the data type the should convert the value to appropriate data type. DataType of Month and Date are both in yyyy-MM-dd format. DataType of Percentage is a numeric value (without percentage sign).
           example: 'No'
-    AssessmentTool:
-      allOf:
-        - $ref: '#/components/schemas/AssessmentToolSummary'
-      type: object
-      properties:
-        checklists:
-          type: array
-          items:
-            $ref: '#/components/schemas/ChecklistAssessmentTool'
-        indicators:
-          type: array
-          items:
-            $ref: '#/components/schemas/IndicatorAssessmentTool'
     Assessment:
       allOf:
         - $ref: '#/components/schemas/AssessmentSummary'
@@ -588,14 +863,22 @@ components:
     AssessmentToolComponent:
       type: object
       properties:
-        inactive:
-          type: boolean
-          example: false
         systemId:
           type: string
           example: '60785eec-4b44-4336-8964-1d20a3bb8474'
         name:
           type: string
+        inactive:
+          type: boolean
+          example: false
+        createdDate:
+          type: string
+          format: date-time
+          example: '2019-03-18T10:38:03.292Z'
+        lastModifiedDate:
+          type: string
+          format: date-time
+          example: '2019-03-18T10:38:03.292Z'
     AssessmentToolReferenceComponent:
       allOf:
         - $ref: '#/components/schemas/AssessmentToolComponent'
